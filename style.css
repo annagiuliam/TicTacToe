@@ -1,48 +1,63 @@
+body {
+  background: linear-gradient(35deg, black, white);
+  height: 100%;
+  margin: 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  font-size: large;
+  font-family: "Courier New";
+}
+input, textarea, button {font-family: inherit}
 main {
-    display : flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items : center;
+  display : flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items : center;
 }
 
 #board-container {
-    visibility: hidden;
-    display: grid;
-    grid-template-columns: repeat(3, 60px);
-    grid-template-rows: repeat(3, 60px);
-    border-bottom: 1px solid black;
-    border-left: 1px solid black;
+  visibility: hidden;
+  display: grid;
+  grid-template-columns: repeat(3, 60px);
+  grid-template-rows: repeat(3, 60px);
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
 }
 
-#current-player {
+#game-control {
   visibility: hidden;
 }
 
 .tile {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px 0;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
   border-top: 1px solid black;
   border-right: 1px solid black;
 }
 
 #submit-players {
-       
-    visibility: visible;
+  position: absolute;    
+  visibility: visible;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 20px;
+  
 }
 
-#start-game {
-    visibility: visible;
+#start-game, #play-again, #exit {
+  
 }
 
-/* #game-win {
+#next-choice-btns {
   visibility: hidden;
-} */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
 
 
 
