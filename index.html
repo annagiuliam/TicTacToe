@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Neucha&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
     <title>Tic Tac Toe</title>
 </head>
 <body>
-    <main>        
+    <main>    
+        <h1>Tic Tac Toe</h1>    
         <div id="board-container">
             <div class="tile" id="0"></div>
             <div class="tile" id="1"></div>
@@ -28,11 +31,16 @@
         
         <div id="submit-players">
             <form>
-                <label for="player1">Player 1: </label>
-                <input type="text" placeholder="Input name" id="player1"/><br>        
-            
-                <label for="player2">Player 2: </label> 
-                <input type="text" placeholder="Input name" id="player2" /><br>               
+                <div class="input-div">
+                    <label for="player1">Player 1: </label>
+                    <input type="text" placeholder="Input name" id="player1"/><br>
+                </div>
+                        
+                <div class="input-div">
+                    <label for="player2">Player 2: </label> 
+                    <input type="text" placeholder="Input name" id="player2" /> or  <input type="checkbox" id="computer" name="computer"> play against computer<br> 
+                </div>
+                              
             </form>  
             
              <button type="submit" value="submit" id="start-game">Start game</button>

@@ -17,21 +17,24 @@ const game = (() => {
     const gameControlDiv = document.querySelector("#game-control");
     const player1NameDiv = document.querySelector("#player1");
     const player2NameDiv = document.querySelector("#player2");
-    const playAgainBtn = document.querySelector("#play-again");
+    const nextChoiceDiv = document.querySelector("#next-choice-btns");
+    const pcCheckbox = document.querySelector("#computer");
+    let pcSelected;
     
     // selectors btns
-    const startGameBtn = document.querySelector("#start-game"); 
-    const nextChoiceDiv = document.querySelector("#next-choice-btns");
+    const startGameBtn = document.querySelector("#start-game");     
     const exitBtn = document.querySelector("#exit");
-         
+    const playAgainBtn = document.querySelector("#play-again");    
 
     // create players
     const player1 = playerFactory("Player 1", "X");
     const player2 = playerFactory("Player 2", "O");  
     
-    startGameBtn.addEventListener("click", () => {     
+    //listeners
+    startGameBtn.addEventListener("click", () => {   
+        pcSelected = pcCheckbox.checked;        
         setNames();
-        loadBoard();    
+        loadBoard();   
     })
 
     playAgainBtn.addEventListener("click", () => {
@@ -48,11 +51,13 @@ const game = (() => {
         formDiv.style.visibility = "visible";  
     })
         
-    function setNames() {
-        const player1Name = player1NameDiv.value;
-        const player2Name = player2NameDiv.value;
-        player1.name = player1Name;
-        player2.name = player2Name;
+    function setNames() {          
+        player1.name = player1NameDiv.value;
+        if (pcSelected) {
+            player2.name = "Computer";
+        } else {
+            player2.name = player2NameDiv.value;
+        }    
     }
 
     function loadBoard() {
@@ -61,37 +66,50 @@ const game = (() => {
         gameBoard.renderBoard();
 
         boardDiv.style.visibility = "visible";
+        nextChoiceDiv.style.visibility = "visible";
         gameControlDiv.style.visibility = "visible";
-        gameControlDiv.textContent = `Current player: ${player1.name}`;
+        gameControlDiv.textContent = `Current player: ${player1.name}, mark: ${player1.mark}`;
         formFields.reset();
 
         player1.active = true;
         player2.active = false;
     }
     
-    function playGame() {        
-        let winningTurn = gameBoard.checkWin();
+    function playGame() {          
+        checkGameStatus();
+        makePcMove();             
+    }
+
+    function checkGameStatus() {
         let currentPlayer = getCurrentPlayer();
-        if (winningTurn) {
-            gameControlDiv.textContent = `${currentPlayer.name} wins!`
-            nextChoiceDiv.style.visibility = "visible";
-            } else if (gameBoard.boardFull())  { 
+         if (gameBoard.checkWin()) {
+            gameControlDiv.textContent = `${currentPlayer.name} wins!`;
+        } else if (gameBoard.boardFull())  { 
             gameControlDiv.textContent = `This game is a tie!`;
-            nextChoiceDiv.style.visibility = "visible";
-            } else {
-            switchPlayer();
-            } 
+        } else {
+            switchPlayer();             
+        }  
+    }
+
+    function makePcMove() {
+        currentPlayer = getCurrentPlayer();
+
+        if (pcSelected && currentPlayer === player2) {                
+            setTimeout(function(){gameBoard.setPcMove();}, 1000);
+            setTimeout(function(){checkGameStatus(currentPlayer);}, 1500);
+        }  
+        
     }
 
     function switchPlayer() {
         if (player1.active) {
             player1.active = false;
             player2.active = true;
-            gameControlDiv.textContent = `Current player: ${player2.name}`;
+            gameControlDiv.textContent = `Current player: ${player2.name}, mark: ${player2.mark}`;
         } else {
             player2.active = false;
             player1.active = true;
-            gameControlDiv.textContent = `Current player: ${player1.name}`;
+            gameControlDiv.textContent = `Current player: ${player1.name}, mark: ${player1.mark}`;
         }
     }
 
@@ -104,12 +122,8 @@ const game = (() => {
         return (player1.active) ? player1 : player2;
     }           
         
-    return {
-        startGameBtn, getCurrentMark, switchPlayer, playGame
-    }
+    return { getCurrentMark, getCurrentPlayer, playGame }
 })();
-
-
 
 const gameBoard = (() => {
     const board = ["", "", "", 
@@ -120,19 +134,28 @@ const gameBoard = (() => {
                         [0, 3, 6], [1, 4, 7], [2, 5, 8],
                         [0, 4, 8], [2, 4, 6] 
                     ];
-    
-    
-    const tiles = document.querySelectorAll(".tile"); 
-    
+
+   
+    const tiles = document.querySelectorAll(".tile");     
     
     tiles.forEach((tile) => {
         tile.addEventListener("click", () => {
+            let currentPlayer = game.getCurrentPlayer();
+           
+            if (currentPlayer.name != "Computer") {
+                placeMark(tile);                    
+                game.playGame(); 
+            }
+             
+                               
+        });
+    });
+
+    function placeMark(tile) {
         const currentMark = game.getCurrentMark();
         fillBoard(tile.id, currentMark);
         tile.textContent = currentMark;
-        game.playGame();                   
-        });
-    });
+    }
     
     function fillBoard(tileId, mark) {
         board.splice(tileId, 1, mark);        
@@ -162,6 +185,24 @@ const gameBoard = (() => {
         return board.every((tile) => { return tile != ""});
     }
 
-    return { board, renderBoard, winningCombos, checkWin, boardFull, resetBoard }
+    function getEmptyTiles() {
+        return emptyTiles = board.reduce(function(arr, curr, idx) {
+            if (curr === '')
+                arr.push(idx);
+            return arr;
+        }, []);        
+    } 
+
+    function setPcMove() {
+        const currentMark = game.getCurrentMark();
+        const emptyTiles = getEmptyTiles();
+       if (emptyTiles.length >= 1) {
+        const randomMove = emptyTiles[Math.floor(Math.random() * emptyTiles.length)];
+        fillBoard(randomMove, currentMark);
+        renderBoard();
+       }      
+    }
+  
+    return { board, renderBoard, checkWin, boardFull, setPcMove, resetBoard }
 })();
 
