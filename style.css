@@ -46,7 +46,7 @@ button {
   text-decoration: none;
   cursor: pointer;
   background-color: #b1f3cd;
-  box-shadow: inset -8px -11px 15px 6px #1da055, inset 14px 11px 9px 11px #a9e4c2;
+  box-shadow: inset -8px -11px 15px 6px #1c7479, inset 14px 11px 9px 11px #a9e4c2;
 }
 
 button:hover {opacity: 1}
